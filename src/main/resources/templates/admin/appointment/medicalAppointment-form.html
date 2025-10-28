@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Cita Médica - Sistema de Turnos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a, #7e22ce);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333333;
+            padding: 20px;
+        }
+        .form-container {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 720px;
+            transition: box-shadow 0.3s ease;
+        }
+        .form-container:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+        .form-title {
+            text-align: center;
+            margin-bottom: 32px;
+            font-weight: 700;
+            font-size: 2rem;
+            color: #003087;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #4a4a4a;
+            font-size: 0.95rem;
+        }
+        .form-control, .form-select {
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            color: #333333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #003087;
+            box-shadow: 0 0 5px rgba(0, 48, 135, 0.3);
+            outline: none;
+        }
+        .btn-primary {
+            background: #003087;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 0;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            color: #ffffff;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: #002766;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #003087;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #003087;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            transition: border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-secondary:hover {
+            border-color: #002766;
+            color: #002766;
+            transform: translateY(-2px);
+        }
+        .required::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .mb-3 {
+            margin-bottom: 24px !important;
+        }
+        /* Estilo del calendario Flatpickr */
+        .flatpickr-calendar {
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-family: 'Inter', sans-serif;
+            padding: 15px;
+            width: 320px;
+            margin: 0 auto;
+        }
+        .flatpickr-innerContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .flatpickr-days {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .dayContainer {
+            width: 280px;
+            min-width: 280px;
+            max-width: 280px;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        .flatpickr-day {
+            border-radius: 4px;
+            font-weight: 500;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            margin: 0;
+            text-align: center;
+            transition: background 0.2s ease;
+            box-sizing: border-box;
+        }
+        .flatpickr-day.disabled, .flatpickr-day.disabled:hover {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+        .flatpickr-day:not(.disabled):not(.selected) {
+            color: #333333;
+        }
+        .flatpickr-day:not(.disabled):hover {
+            background: #f8f9fa;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: #003087;
+            color: #ffffff;
+        }
+        .flatpickr-month {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .flatpickr-monthDropdown-months, .flatpickr-current-month input.cur-year {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: #003087;
+        }
+        .flatpickr-prev-month, .flatpickr-next-month {
+            color: #6c757d;
+        }
+        .flatpickr-prev-month:hover, .flatpickr-next-month:hover {
+            color: #003087;
+        }
+        .flatpickr-weekdays {
+            width: 280px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .flatpickr-weekday {
+            font-weight: 500;
+            color: #6c757d;
+            width: 40px;
+            text-align: center;
+            flex: 1;
+        }
+        .flatpickr-rContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* Estilo del select de horarios */
+        #hour {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 12px 40px 12px 16px; /* Espacio para la flecha */
+            font-size: 0.9rem;
+            color: #333333;
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #hour:focus {
+            border-color: #003087;
+            box-shadow: 0 0 5px rgba(0, 48, 135, 0.3);
+            outline: none;
+        }
+        #hour::after {
+            content: "▼";
+            font-size: 0.8rem;
+            color: #6c757d;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        #hour option {
+            padding: 10px;
+            text-align: left;
+            transition: background 0.2s ease;
+            box-sizing: border-box;
+        }
+        #hour option.available {
+            background: #ffffff;
+            color: #333333;
+        }
+        #hour option.available:hover {
+            background: #f8f9fa;
+        }
+        #hour option.disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            text-decoration: line-through;
+            position: relative;
+        }
+        #hour option.disabled::after {
+            content: "✖";
+            position: absolute;
+            right: 10px;
+            color: #dc3545;
+            font-weight: bold;
+        }
+        #hour option.selected {
+            background: #e6f0fa;
+            color: #003087;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1 class="form-title"><span>🩺</span> Nueva Cita Médica</h1>
+
+    <form th:action="@{/medicalAppointments/create}" th:object="${medicalAppointment}" method="post">
+        <!-- Especialidad -->
+        <div class="mb-3">
+            <label for="specialtyId" class="form-label required">Especialidad</label>
+            <select class="form-select" id="specialtyId" required>
+                <option value="" disabled selected>-- Seleccione una especialidad --</option>
+                <option th:each="specialty : ${specialties}" th:value="${specialty.idSpecialty}" th:text="${specialty.name}"></option>
+            </select>
+        </div>
+
+        <!-- Doctor -->
+        <div class="mb-3">
+            <label for="doctorId" class="form-label required">Doctor</label>
+            <select th:field="*{doctorId}" class="form-select" id="doctorId" required>
+                <option value="" disabled selected>-- Seleccione un doctor --</option>
+            </select>
+        </div>
+
+        <!-- Paciente -->
+        <div class="mb-3">
+            <label for="patientId" class="form-label required">Paciente</label>
+            <select th:field="*{patientId}" class="form-select" id="patientId" required>
+                <option value="" disabled selected>-- Seleccione un paciente --</option>
+                <option th:each="patient : ${patients}" th:value="${patient.id}" th:text="${patient.firstName + ' ' + patient.lastName + ' - DNI: ' + patient.dni}"></option>
+            </select>
+        </div>
+
+        <!-- Servicio -->
+        <div class="mb-3">
+            <label for="serviceId" class="form-label required">Servicio</label>
+            <select th:field="*{serviceId}" class="form-select" id="serviceId" required>
+                <option value="" disabled selected>-- Seleccione un servicio --</option>
+            </select>
+        </div>
+
+        <!-- Lugar -->
+        <div class="mb-3">
+            <label for="placeId" class="form-label required">Lugar</label>
+            <select th:field="*{placeId}" class="form-select" id="placeId" required>
+                <option value="" disabled selected>-- Seleccione un lugar --</option>
+                <option th:each="place : ${places}" th:value="${place.idPlace}" th:text="${place.name + ' - ' + place.addres}"></option>
+            </select>
+        </div>
+
+        <!-- Fecha -->
+        <div class="mb-3">
+            <label for="day" class="form-label required">Fecha</label>
+            <input type="text" th:field="*{day}" class="form-control" id="day" placeholder="Seleccione una fecha" required>
+        </div>
+
+        <!-- Hora -->
+        <div class="mb-3">
+            <label for="hour" class="form-label required">Hora</label>
+            <select th:field="*{hour}" class="form-select" id="hour" required>
+                <option value="" disabled selected>-- Seleccione un horario --</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirmar Cita</button>
+    </form>
+
+    <a th:href="@{/admin/index}" class="btn-secondary">🏠 Volver al Inicio</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/en.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const specialtySelect = document.getElementById('specialtyId');
+    const doctorSelect = document.getElementById('doctorId');
+    const serviceSelect = document.getElementById('serviceId');
+    const dayInput = document.getElementById('day');
+    const hourSelect = document.getElementById('hour');
+    let calendar;
+
+    // Cargar doctores y servicios según la especialidad
+    specialtySelect.addEventListener('change', function() {
+        const specialtyId = specialtySelect.value;
+        if (!specialtyId) return;
+
+        // Doctores
+        fetch(`/api/doctors/by-specialty/${specialtyId}`)
+            .then(res => res.json())
+            .then(doctors => {
+                doctorSelect.innerHTML = '<option value="" disabled selected>-- Seleccione un doctor --</option>';
+                doctors.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = `${doc.firstName} ${doc.lastName}`;
+                    doctorSelect.appendChild(option);
+                });
+            }).catch(err => console.error('Error cargando doctores:', err));
+
+        // Servicios
+        fetch(`/api/services/by-specialty/${specialtyId}`)
+            .then(res => res.json())
+            .then(services => {
+                serviceSelect.innerHTML = '<option value="" disabled selected>-- Seleccione un servicio --</option>';
+                services.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s.idService;
+                    option.textContent = `${s.name} (${s.durationService} min)`;
+                    serviceSelect.appendChild(option);
+                });
+            }).catch(err => console.error('Error cargando servicios:', err));
+    });
+
+    // Función para cargar días disponibles y habilitar calendario
+    doctorSelect.addEventListener('change', function() {
+        const doctorId = doctorSelect.value;
+        if (!doctorId) return;
+
+        fetch(`/api/available-days?doctorId=${doctorId}`)
+            .then(res => res.json())
+            .then(days => {
+                if (calendar) calendar.destroy();
+                calendar = flatpickr("#day", {
+                    dateFormat: "Y-m-d",
+                    enable: days,
+                    firstDayOfWeek: 1,
+                    locale: "en",
+                    showMonths: 1,
+                    weekNumbers: false,
+                    onChange: loadAvailableHours,
+                    onDayCreate: function(dObj, dStr, fp, dayElem) {
+                        if (dayElem.classList.contains('flatpickr-disabled')) {
+                            dayElem.classList.add('disabled');
+                        }
+                    }
+                });
+            }).catch(err => console.error('Error cargando días disponibles:', err));
+    });
+
+    // Cargar horarios según doctor y día seleccionados
+    function loadAvailableHours(selectedDates, dateStr) {
+        const doctorId = doctorSelect.value;
+        const day = dateStr;
+        if (!doctorId || !day) return;
+
+        fetch(`/api/available-hours?doctorId=${doctorId}&day=${day}`)
+            .then(res => res.json())
+            .then(hours => {
+                hourSelect.innerHTML = '<option value="" disabled selected>-- Seleccione un horario --</option>';
+                hours.forEach(h => {
+                    const option = document.createElement('option');
+                    option.value = h;
+                    option.textContent = h;
+                    // Simulamos disponibilidad (ajusta según tu API)
+                    if (Math.random() > 0.3) { // 70% de probabilidad de estar disponible
+                        option.classList.add('available');
+                    } else {
+                        option.classList.add('disabled');
+                    }
+                    hourSelect.appendChild(option);
+                });
+                // Marcar la primera opción disponible como seleccionada (si existe)
+                const firstAvailable = hourSelect.querySelector('option.available');
+                if (firstAvailable) {
+                    firstAvailable.classList.add('selected');
+                    hourSelect.value = firstAvailable.value;
+                }
+            }).catch(err => console.error('Error cargando horarios:', err));
+    }
+});
+</script>
+</body>
+</html>
