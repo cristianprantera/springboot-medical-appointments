@@ -123,5 +123,3 @@ Enfocado en el desarrollo **backend con Java y Spring Boot**, aprendiendo arquit
 ---
 
 💬 *Proyecto desarrollado como práctica personal para fortalecer conocimientos en desarrollo backend con Java y Spring Boot.*
-
-```
