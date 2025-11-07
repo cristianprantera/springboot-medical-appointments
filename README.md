@@ -32,22 +32,17 @@ Antes de ejecutar el proyecto, configurá las siguientes **variables de entorno*
 2. Agregar las variables indicadas arriba (Name / Value).
 3. Ejecutar el proyecto con **Run ▶️**
 
-### 💻 En consola (Linux/Mac)
-```bash
-export DB_URL=jdbc:postgresql://localhost:5432/turnos
-export USERNAME=postgres
-export PASSWORD=12345
+✅ 💻 En consola (Linux/Mac)
+export DB_URL=jdbc:postgresql://localhost:5432/turnos_db
+export DB_USERNAME=tu_usuario_postgres
+export DB_PASSWORD=tu_contraseña_postgres
 mvn spring-boot:run
-````
 
-### 💻 En Windows (CMD o PowerShell)
-
-```cmd
-set DB_URL=jdbc:postgresql://localhost:5432/turnos
-set USERNAME=postgres
-set PASSWORD=12345
+✅ 💻 En Windows (CMD o PowerShell)
+set DB_URL=jdbc:postgresql://localhost:5432/turnos_db
+set DB_USERNAME=tu_usuario_postgres
+set DB_PASSWORD=tu_contraseña_postgres
 mvn spring-boot:run
-```
 
 ---
 
