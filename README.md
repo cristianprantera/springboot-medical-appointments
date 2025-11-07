@@ -1,4 +1,3 @@
-
 # 🏥 Sistema de Turnos Médicos – Spring Boot
 
 Aplicación web desarrollada con **Spring Boot**, **Thymeleaf** y **PostgreSQL** para la gestión de turnos médicos, doctores y pacientes.  
@@ -21,100 +20,82 @@ Permite realizar operaciones CRUD, manejar roles con acceso diferenciado (Admini
 
 Antes de ejecutar el proyecto, configurá las siguientes **variables de entorno** (Environment Variables):
 
-| Variable | Descripción | Ejemplo |
-|-----------|--------------|----------|
-| `DB_URL` | URL JDBC de conexión a la base de datos PostgreSQL | `jdbc:postgresql://localhost:5432/turnos` |
-| `USERNAME` | Usuario de la base de datos | `postgres` |
-| `PASSWORD` | Contraseña de la base de datos | `12345` |
+| Variable        | Descripción                                     | Ejemplo                                           |
+|----------------|--------------------------------------------------|--------------------------------------------------|
+| `DB_URL`       | URL JDBC de conexión a PostgreSQL               | `jdbc:postgresql://localhost:5432/turnos_db`     |
+| `DB_USERNAME`  | Usuario de la base de datos                     | `postgres`                                        |
+| `DB_PASSWORD`  | Contraseña del usuario de la base de datos     | `tu_contraseña_postgres`                         |
 
-### 🔧 En Eclipse
-1. Ir a **Run → Run Configurations → Spring Boot App → TurnosApplication → Environment**
-2. Agregar las variables indicadas arriba (Name / Value).
-3. Ejecutar el proyecto con **Run ▶️**
+### 🔧 En Eclipse / IntelliJ
 
-✅ 💻 En consola (Linux/Mac)
+1. Ir a **Run → Run Configurations → Environment (Variables)**  
+2. Agregar las variables con sus correspondientes valores.  
+3. Ejecutar el proyecto.
+
+---
+
+### 💻 En consola (Linux/Mac)
+
+```bash
 export DB_URL=jdbc:postgresql://localhost:5432/turnos_db
 export DB_USERNAME=tu_usuario_postgres
 export DB_PASSWORD=tu_contraseña_postgres
 mvn spring-boot:run
-
-✅ 💻 En Windows (CMD o PowerShell)
+💻 En Windows (CMD o PowerShell)
+cmd
+Copiar código
 set DB_URL=jdbc:postgresql://localhost:5432/turnos_db
 set DB_USERNAME=tu_usuario_postgres
 set DB_PASSWORD=tu_contraseña_postgres
 mvn spring-boot:run
+🧠 Cómo ejecutar el proyecto
+Cloná el repositorio:
 
----
+bash
+Copiar código
+git clone https://github.com/cristianprantera/springboot-medical-appointments.git
+Configurá las variables de entorno como se indica arriba.
 
-## 🧠 Cómo ejecutar el proyecto
+Creá la base de datos en PostgreSQL:
 
-1. Cloná el repositorio:
+sql
+Copiar código
+CREATE DATABASE turnos_db;
+Ejecutá la aplicación:
 
-   ```bash
-   git clone https://github.com/cristianprantera/springboot-medical-appointments.git
-   ```
-2. Configurá las variables de entorno como se indica arriba.
-3. Creá la base de datos en PostgreSQL:
+bash
+Copiar código
+mvn spring-boot:run
+Accedé desde el navegador a:
+👉 http://localhost:8080
 
-   ```sql
-   CREATE DATABASE turnos;
-   ```
-4. Ejecutá el proyecto con:
+🧩 Funcionalidades principales
+✅ CRUD de Doctores, Pacientes, Turnos, Especialidades y Servicios
+🔐 Sistema de roles: Administrador, Doctor y Paciente
+🧾 Asignación de turnos médicos con validaciones
+📊 Persistencia de datos con PostgreSQL y JPA/Hibernate
+💻 Interfaz web con Thymeleaf y Bootstrap
 
-   ```bash
-   mvn spring-boot:run
-   ```
-5. Accedé desde el navegador a:
-   👉 [http://localhost:8080](http://localhost:8080)
+⚠️ Nota sobre la estructura de turnos (Appointments)
+Actualmente, el sistema tiene una clase abstracta Appointment de la cual solamente hereda MedicalAppointment.
+Está planificado implementar otro tipo de turnos administrativos (trámites, gestiones internas, etc.) que también heredará de Appointment.
 
----
+🧑‍💻 Roles del sistema
+Rol	Permisos principales
+Administrador	Gestiona doctores, pacientes, servicios y todos los turnos.
+Doctor	Visualiza y administra sus turnos.
+Paciente	Solicita, consulta y cancela sus propios turnos.
 
-## 🧩 Funcionalidades principales
+🗃️ Base de datos
+Asegurate de tener PostgreSQL corriendo y una base de datos llamada turnos_db:
 
-* ✅ CRUD de **Doctores**, **Pacientes**, **Turnos**, **Especialidades** y **Servicios**.
-* 🔐 Sistema de **roles**: Administrador, Doctor y Paciente.
-* 🧾 Gestión de turnos médicos con relación entre entidades.
-* 📊 Integración con base de datos PostgreSQL mediante JPA/Hibernate.
-* 💻 Interfaz web dinámica con **Thymeleaf** y **Bootstrap**.
+sql
+Copiar código
+CREATE DATABASE turnos_db;
+👨‍💻 Autor
+Cristian Prantera
+Estudiante de Licenciatura en Sistemas (UNLa) – 3er año.
+Enfocado en desarrollo backend con Java y Spring Boot, aplicando MVC, JPA/Hibernate y buenas prácticas.
+🔗 LinkedIn · GitHub
 
----
-
-## ⚠️ Nota sobre la estructura de turnos (Appointments)
-
-Actualmente, el sistema cuenta con una clase abstracta **`Appointment`** de la cual **solo hereda `MedicalAppointment`**, ya que el proyecto está en desarrollo.
-Está planificado agregar un nuevo tipo de cita administrativa (por ejemplo, trámites o gestiones internas del centro médico), que también heredará de `Appointment`.
-Esto permitirá manejar distintos tipos de turnos dentro de una misma jerarquía, aplicando herencia y polimorfismo en la capa de dominio.
-
----
-
-## 🧑‍💻 Roles del sistema
-
-| Rol               | Descripción                                                    |
-| ----------------- | -------------------------------------------------------------- |
-| **Administrador** | Crea, edita y elimina doctores, pacientes, servicios y turnos. |
-| **Doctor**        | Visualiza y administra sus propios turnos.                     |
-| **Paciente**      | Solicita, consulta y cancela turnos médicos.                   |
-
----
-
-
-## 🧩 Base de datos
-
-Asegurate de tener PostgreSQL corriendo en el puerto **5432** y una base de datos llamada `turnos`:
-
-```sql
-CREATE DATABASE turnos;
-```
-
----
-
-## 👨‍💻 Autor
-
-**Cristian Prantera**
-Estudiante de **Licenciatura en Sistemas (UNLa)** – 3er año
-Enfocado en el desarrollo **backend con Java y Spring Boot**, aprendiendo arquitectura MVC, JPA/Hibernate y buenas prácticas en desarrollo de software.
-🔗 [LinkedIn](https://www.linkedin.com/in/cristianprantera/) · [GitHub](https://github.com/cristianprantera)
-
----
-
-💬 *Proyecto desarrollado como práctica personal para fortalecer conocimientos en desarrollo backend con Java y Spring Boot.*
+💬 Proyecto desarrollado como práctica personal para fortalecer conocimientos en backend con Java y Spring Boot.
